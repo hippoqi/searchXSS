@@ -7,7 +7,7 @@ def hello():
     if request.method == "POST":
         formsearch = request.form.get('txtsearch')
         print(formsearch)
-    return render_template('index.html')
+    return render_template('input_pass.html')
 
 def sample_sum_func(a = 0, b = 0):
     return a + b

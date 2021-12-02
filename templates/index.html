@@ -7,10 +7,10 @@
 </head>
 
 <body>
-    <label>search: </label>
+
     <form method="POST" class="box">
 <!--        <input type="text" class="form-control" name="txtsearch">-->
-        <input onchange=alert(1) value=xss>
+        <label>search: </label><input onchange=alert(1) value=xss>
         <input type="submit" name="search" value="search">
     </form>
 </body>

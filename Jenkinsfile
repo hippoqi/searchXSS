@@ -1,27 +1,25 @@
 pipeline {
-    agent any
-    stages {
-		stage('test') {
-		    agent {
-		        docker {
-		            image 'python:3.9.7-alpine3.13'
-		        }
-		    }
-            steps {
-				sh 'python unit_test.py'
-            }
-        }
-
-    stage ("OWASP Dependency Check"){
-		steps{
-			dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'Default'
+	agent any
+	stages {
+		stage ('Checkout') {
+			steps {
+				git branch:'master', url: 'https://github.com/hippoqi/searchXSS'
+			}
 		}
-
+		stage('Code Quality Check via SonarQube') {
+			steps {
+				script {
+					def scannerHome = tool 'SonarQube';
+					withSonarQubeEnv('SonarQube') {
+					sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=OWASP -Dsonar.sources=."
+					}
+				}
+			}
+		}
 	}
-    }
-	post{
-		success{
-			dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+	post {
+		always {
+			recordIssues enabledForFailure: true, tool: sonarQube()
 		}
 	}
 }
